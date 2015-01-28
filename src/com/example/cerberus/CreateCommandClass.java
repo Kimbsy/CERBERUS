@@ -19,26 +19,65 @@ public class CreateCommandClass extends AsyncTask<String, Integer, String> {
 	 * String combinations for various commands
 	 */
 	// start fire
-	private String[][] fireOn = { { "fire", "on" }, { "light", "fire" },
-			{ "start", "fire" }, { "get", "fire", "going" },
-			{ "feeling", "cold" }, };
+	private String[][] fireOn = {
+			{ "fire", "on" },
+			{ "light", "fire" },
+			{ "start", "fire" },
+			{ "get", "fire", "going" },
+			{ "feeling", "cold" },
+	};
 	// stop fire
-	private String[][] fireOff = { { "fire", "off" }, { "fire", "out" },
-			{ "too", "hot" }, };
+	private String[][] fireOff = {
+			{ "fire", "off" },
+			{ "fire", "out" },
+			{ "too", "hot" },
+	};
 	// add weight
-	private String[][] addWeight = { { "beth", "weigh" }, { "best", "weigh" },
-			{ "dave", "weight" }, { "beth", "wait" }, { "best", "wait" },
-			{ "dave", "wait" }, { "beth", "way" }, { "best", "way" },
-			{ "dave", "way" }, };
+	private String[][] addWeight = {
+			{ "beth", "weigh" },
+			{ "best", "weigh" },
+			{ "dave", "weight" },
+			{ "beth", "wait" },
+			{ "best", "wait" },
+			{ "dave", "wait" },
+			{ "beth", "way" },
+			{ "best", "way" },
+			{ "dave", "way" },
+	};
 	// showWeightGraph
-	private String[][] showWeightGraph = { { "show", "weigh" },
-			{ "show", "wait" }, { "show", "way" }, };
+	private String[][] showWeightGraph = {
+			{ "show", "weigh" },
+			{ "show", "wait" },
+			{ "show", "way" },
+	};
 	// closeWeightGraph
-	private String[][] closeWeightGraph = { { "close", "graph" },
-			{ "close", "grass" }, { "clover", "graph" }, { "clover", "grass" },
-			{ "put", "away" }, };
+	private String[][] closeWeightGraph = {
+			{ "close", "graph" },
+			{ "close", "grass" },
+			{ "clover", "graph" },
+			{ "clover", "grass" },
+			{ "put", "away" },
+	};
+	// show ISS stream
+	private String[][] showSpaceCam = {
+			{ "show", "world" },
+			{ "show", "space" },
+			{ "show", "everything" },
+			{ "show", "state" },
+	};
+	// close ISS stream
+	private String[][] closeSpaceCam = {
+			{ "enough", "space" },
+			{ "turn", "off" },
+			{ "close" },
+			{ "clothes" },
+	};
 	// thank you
-	private String[][] thanks = { { "thanks" }, { "thank you" }, { "cheers" }, };
+	private String[][] thanks = {
+			{ "thanks" },
+			{ "thank you" },
+			{ "cheers" },
+	};
 
 	/**
 	 * Randomized responses
@@ -94,8 +133,10 @@ public class CreateCommandClass extends AsyncTask<String, Integer, String> {
 			Log.i("command", "Turning fire on...");
 
 			// create commands to export display and play video
-			String[] commands = { "espeak -a 200 '" + response + "'",
-					"export DISPLAY=:0.0 && nohup vlc --fullscreen --repeat Videos/fireplace.mp4 &" };
+			String[] commands = {
+					"espeak -a 200 '" + response + "'",
+					"export DISPLAY=:0.0 && nohup vlc --fullscreen --repeat Videos/fireplace.mp4 &",
+			};
 
 			// execute commands
 			sendCommand(commands);
@@ -137,11 +178,9 @@ public class CreateCommandClass extends AsyncTask<String, Integer, String> {
 				// then run Python script to import data and delete newData file
 				String[] commands = {
 						"espeak 'user: " + user + ", weight: " + weight + "'",
-
 						"cd CERBERUS/weight && " + "echo '" + user + ","
-								+ weight + "' > newData.csv && "
-								+ "python inputWeight.py",
-				// "tail -n 1 weight.csv | espeak",
+						+ weight + "' > newData.csv && "
+						+ "python inputWeight.py",
 				};
 
 				// execute commands
@@ -163,7 +202,8 @@ public class CreateCommandClass extends AsyncTask<String, Integer, String> {
 					"espeak -a 200 '" + response + "'",
 					// "python -m SimpleHTTPServer & " +
 					"export DISPLAY=:0.0 && "
-							+ "chromium-browser --kiosk 'http://localhost:8000/weight/weight.html'", };
+					+ "chromium-browser --kiosk 'http://localhost:8000/weight/weight.html'",
+			};
 
 			// execute commands
 			sendCommand(commands);
@@ -176,15 +216,45 @@ public class CreateCommandClass extends AsyncTask<String, Integer, String> {
 
 			// create command to close chromium window and shut down any http
 			// servers
-			String[] commands = { "espeak -a 200 '" + response + "'",
+			String[] commands = {
+					"espeak -a 200 '" + response + "'",
 					"export DISPLAY=:0.0 && " + "pkill chromium",
-			// why not leave it running?
-			// "killall python",
 			};
 
 			// execute commands
 			sendCommand(commands);
 		}
+		/**
+		 * Show Camera feed form ISS
+		 */
+		else if (checkString(words, showSpaceCam)) {
+			Log.i("command", "Showing camera feed...");
+			
+			// create command to display ISS camera feed using mplayer
+			String[] commands = {
+					"espeak -a 200 '" + response + "'",
+//					WHY U NO WORK????
+//					"export DISPLAY=:0.0 && nohup mplayer -fs -stop-xscreensaver Videos/world.m3u8 &",
+					"export DISPLAY=:0.0 && mplayer -fs -stop-xscreensaver Videos/world.m3u8",
+			};
+			
+			// execute commands
+			sendCommand(commands);
+		}
+		/**
+		 * Close ISS stream
+		 */
+		else if (checkString(words, closeSpaceCam)) {
+			Log.i("command", "Closing camera feed...");
+			
+			// create command to close mplayer
+			String[] commands = {
+					"espeak -a 200 '" + response + "'",
+					"pkill mplayer",
+			};
+		}
+		/*
+		 */
 		/**
 		 * SAY THANKS
 		 */
