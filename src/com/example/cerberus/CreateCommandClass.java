@@ -83,10 +83,17 @@ public class CreateCommandClass extends AsyncTask<String, Integer, String> {
 	 * Randomized responses
 	 */
 	Random rand = new Random();
-	private String[] responses = { "of course", "sure thing", "righty ho",
-			"absolutely", "it would be my pleasure",
-			"i was just about to suggest that", "if you say so", "okay",
-			"just for yoo", "already on it", };
+	private String[] responses = {
+		"of course",
+		"sure thing",
+		"righty ho",
+		"absolutely",
+		"it would be my pleasure",
+		"i was just about to suggest that",
+		"if you say so", "okay",
+		"just for yoo",
+		"already on it",
+	};
 
 	/**
 	 * Test to see if keywords from phrase occur in matched words
@@ -274,8 +281,18 @@ public class CreateCommandClass extends AsyncTask<String, Integer, String> {
 			Log.i("command", "phrase not recognised");
 
 			// create command to say it doesnt know what to do
-			String[] commands = { "espeak 'i dont know how to "
-					+ transposePossesives(words) + "'" };
+			String[] commands = {};
+			if (rand.nextBoolean()) {
+				commands = {
+					"espeak -a 200 'i dont know how to "
+					+ transposePossesives(words) + "'",
+				};
+			}
+			else {
+				commands = {
+					"espeak -a 200 'im sorry dave. im afraid i cant do that'",
+				};
+			}
 
 			// execute commands
 			sendCommand(commands);
