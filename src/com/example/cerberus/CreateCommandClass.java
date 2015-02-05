@@ -141,7 +141,9 @@ public class CreateCommandClass extends AsyncTask<String, Integer, String> {
 
 			// create commands to export display and play video
 			String[] commands = {
+					"echo 'y' > /dev/ttyUSB0",
 					"espeak -a 200 '" + response + "'",
+					"echo 'n' > /dev/ttyUSB0",
 					"export DISPLAY=:0.0 && nohup vlc --fullscreen --repeat Videos/fireplace.mp4 &",
 			};
 
@@ -155,8 +157,12 @@ public class CreateCommandClass extends AsyncTask<String, Integer, String> {
 			Log.i("command", "Turning fire off...");
 
 			// create commands to kill vlc process
-			String[] commands = { "espeak -a 200 '" + response + "'",
-					"pkill vlc" };
+			String[] commands = {
+					"echo 'y' > /dev/ttyUSB0",
+					"espeak -a 200 '" + response + "'",
+					"echo 'n' > /dev/ttyUSB0",
+					"pkill vlc"
+			};
 
 			// execute commands
 			sendCommand(commands);
@@ -184,7 +190,9 @@ public class CreateCommandClass extends AsyncTask<String, Integer, String> {
 				// create commands to create newData file with inputs,
 				// then run Python script to import data and delete newData file
 				String[] commands = {
+						"echo 'y' > /dev/ttyUSB0",
 						"espeak 'user: " + user + ", weight: " + weight + "'",
+						"echo 'n' > /dev/ttyUSB0",
 						"cd CERBERUS/weight && " + "echo '" + user + ","
 						+ weight + "' > newData.csv && "
 						+ "python inputWeight.py",
@@ -194,6 +202,16 @@ public class CreateCommandClass extends AsyncTask<String, Integer, String> {
 				sendCommand(commands);
 			} else {
 				Log.i("command", "unknown user or weight");
+				
+				// create command to express confusion
+				String[] commands = {
+						"echo 'y' > /dev/ttyUSB0",
+						"espeak -a 200 'im sorry i didnt quite catch that",
+						"echo 'n' > /dev/ttyUSB0",
+				};
+				
+				// execute commands
+				sendCommand(commands);
 			}
 		}
 		/**
@@ -206,7 +224,9 @@ public class CreateCommandClass extends AsyncTask<String, Integer, String> {
 			// fullscreen
 			// python http server is required for d3
 			String[] commands = {
+					"echo 'y' > /dev/ttyUSB0",
 					"espeak -a 200 '" + response + "'",
+					"echo 'n' > /dev/ttyUSB0",
 					// "python -m SimpleHTTPServer & " +
 					"export DISPLAY=:0.0 && "
 					+ "chromium-browser --kiosk 'http://localhost:8000/weight/weight.html'",
@@ -224,7 +244,9 @@ public class CreateCommandClass extends AsyncTask<String, Integer, String> {
 			// create command to close chromium window and shut down any http
 			// servers
 			String[] commands = {
+					"echo 'y' > /dev/ttyUSB0",
 					"espeak -a 200 '" + response + "'",
+					"echo 'n' > /dev/ttyUSB0",
 					"export DISPLAY=:0.0 && " + "pkill chromium",
 			};
 
@@ -239,7 +261,9 @@ public class CreateCommandClass extends AsyncTask<String, Integer, String> {
 			
 			// create command to display ISS camera feed using mplayer
 			String[] commands = {
+					"echo 'y' > /dev/ttyUSB0",
 					"espeak -a 200 '" + response + "'",
+					"echo 'n' > /dev/ttyUSB0",
 //					WHY U NO WORK????
 //					"export DISPLAY=:0.0 && nohup mplayer -fs -stop-xscreensaver Videos/world.m3u8 &",
 					"export DISPLAY=:0.0 && mplayer -fs -stop-xscreensaver Videos/world.m3u8",
@@ -256,7 +280,9 @@ public class CreateCommandClass extends AsyncTask<String, Integer, String> {
 			
 			// create command to close mplayer
 			String[] commands = {
+					"echo 'y' > /dev/ttyUSB0",
 					"espeak -a 200 '" + response + "'",
+					"echo 'n' > /dev/ttyUSB0",
 					"pkill mplayer",
 			};
 		}
@@ -269,7 +295,11 @@ public class CreateCommandClass extends AsyncTask<String, Integer, String> {
 			Log.i("command", "Receiving thanks...");
 
 			// create commands to kill vlc process
-			String[] commands = { "espeak -a 200 'your welcome'" };
+			String[] commands = {
+					"echo 'y' > /dev/ttyUSB0",
+					"espeak -a 200 'your welcome'",
+					"echo 'n' > /dev/ttyUSB0",
+			};
 
 			// execute commands
 			sendCommand(commands);
@@ -281,25 +311,27 @@ public class CreateCommandClass extends AsyncTask<String, Integer, String> {
 			Log.i("command", "phrase not recognised");
 
 			// create command to say it doesnt know what to do
-			String[] commands = {};
 			if (rand.nextBoolean()) {
-				commands = {
+				String[] commands = {
 					"echo 'y' > /dev/ttyUSB0",
 					"espeak -a 200 'i dont know how to "
 					+ transposePossesives(words) + "'",
 					"echo 'n' > /dev/ttyUSB0",
 				};
+				
+				// execute commands
+				sendCommand(commands);
 			}
 			else {
-				commands = {
+				String[] commands = {
 					"echo 'y' > /dev/ttyUSB0",
 					"espeak -a 200 'im sorry dave. im afraid i cant do that'",
 					"echo 'n' > /dev/ttyUSB0",
 				};
+				
+				// execute commands
+				sendCommand(commands);
 			}
-
-			// execute commands
-			sendCommand(commands);
 		}
 	}
 
